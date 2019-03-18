@@ -1,5 +1,5 @@
-# Base WebFramework NodeJS
-[![Build Status](https://travis-ci.org/RAK3RMAN/base-webframework-nodejs.svg?branch=master)](https://travis-ci.org/RAK3RMAN/base-webframework-nodejs)
+# Auth WebFramework NodeJS
+[![Build Status](https://travis-ci.org/RAK3RMAN/auth-webframework-nodejs.svg?branch=master)](https://travis-ci.org/RAK3RMAN/auth-webframework-nodejs)
 
 A general template for a nodejs web application running express
 
