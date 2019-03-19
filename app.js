@@ -17,6 +17,9 @@ let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let ip = require('ip');
 let uuidv4 = require('uuid/v4');
+let mongoose = require('mongoose');
+let passport = require('passport');
+let flash = require('connect-flash');
 
 //Setup Local Database
 let dataStore = require('data-store');
@@ -36,6 +39,12 @@ if (console_port === undefined) {
     storage.set('console_port', 3000);
     console.log('Config Manager: Port Set to DEFAULT: 3000');
 }
+//MongoDB URL Check
+let mongodb_url = storage.get('mongodb_url');
+if (mongodb_url === undefined) {
+    storage.set('mongodb_url', 'mongodb://localhost:27017');
+    console.log('Auth Config Manager: MongoDB URL Set to DEFAULT: mongodb://localhost:27017');
+}
 //End of System Config Checks - - - - - - - - - - - - - -
 
 //Declare App
@@ -47,7 +56,14 @@ let exitOpt = require('./config/exitOpt.js');
 setTimeout(exitOpt.testCheck, 3000);
 
 //Routers
-let mainRoutes = require('./routes/mainRoutes.js');
+let authRouter = require('./routes/authRoutes.js');
+let mainRouter = require('./routes/mainRoutes.js');
+
+//Resolvers
+let auth = require('./resolvers/authResolver.js');
+
+//Passport Setup
+require('./sys_funct/passport.js')(passport);
 
 //Express Processes/Packages Setup
 app.use(session({
@@ -61,6 +77,9 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Import Static Files to Webpages
 app.use('/static', express.static(process.cwd() + '/static'));
@@ -69,13 +88,31 @@ app.use('/static', express.static(process.cwd() + '/static'));
 
 
 //===================================================//
-//       --- LEMAgent Config Routes/Logic  ---       //
+//       --- AUTHBASE Config Routes/Logic  ---       //
 //===================================================//
 
-//Create Routes
-app.get('/', mainRoutes.homeRoute);
+//Secret Dashboard
+app.get('/', auth.isLoggedIn, mainRouter.homeRoute);
 
-//End of LEMAgent Config Routes/Logic - - - - - - - - -
+//Auth Routes
+app.get('/login', authRouter.loginPage);
+app.get('/signup', authRouter.signupPage);
+app.get('/logout', function (req, res) {
+    req.logout();
+    res.redirect('/login');
+});
+app.post('/login', passport.authenticate('local-login', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
+app.post('/signup', passport.authenticate('local-signup', {
+    successRedirect: '/',
+    failureRedirect: '/signup',
+    failureFlash: true
+}));
+
+//End of AUTHBASE Config Routes/Logic - - - - - - - - -
 
 
 //===================================================//
@@ -110,11 +147,24 @@ let server = http.createServer(app);
 server.listen(storage.get('console_port'), function () {
     console.log(' ');
     console.log('============================================');
-    console.log('  Base-WebFramework-NodeJS | RAk3rman 2019  ');
+    console.log('  Auth-WebFramework-NodeJS | RAk3rman 2019  ');
     console.log('============================================');
     console.log('Web Page Accessable at: ' + ip.address() + ":" + storage.get('console_port'));
+    console.log('MongoDB Accessed at: ' + storage.get('mongodb_url'));
     console.log(' ');
 });
+
+//Database Setup
+mongoose.connection.on('connected', function () {
+    console.log('MongoDB: Connected')
+});
+mongoose.connection.on('timeout', function () {
+    console.log('MongoDB: Error')
+});
+mongoose.connection.on('disconnected', function () {
+    console.log('MongoDB: Disconnected')
+});
+mongoose.connect(storage.get('mongodb_url'), {useNewUrlParser: true, connectTimeoutMS: 10000});
 
 //End of External Connections Setup - - - - - - - - - -
 

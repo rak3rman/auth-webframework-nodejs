@@ -1,10 +1,10 @@
 # Auth WebFramework NodeJS
 [![Build Status](https://travis-ci.org/RAK3RMAN/auth-webframework-nodejs.svg?branch=master)](https://travis-ci.org/RAK3RMAN/auth-webframework-nodejs)
 
-A general template for a nodejs web application running express
+A general template for a nodejs web application running express with authentication
 
 ### Basic Structure
-This project is a base web framework to run a web application using express through NodeJS. Being a 'base' framework, this project only displays a webpage through a specified port with no authentication. The structure of this application is described below in the application map.
+This project is a auth web framework which uses the plugin Passport.js to provide authentication for the webpage routes. Being a 'auth' framework, this project is very minimal and only displays a webpage through a specified port with authentication. The structure of this application is described below in the application map.
 
 ### Application Map
 ```
@@ -30,11 +30,11 @@ This project is a base web framework to run a web application using express thro
 ## Install and Setup
 - Clone the repository from github.com
 ```
-git clone https://github.com/RAK3RMAN/base-webframework-nodejs.git
+git clone https://github.com/RAK3RMAN/auth-webframework-nodejs.git
 ```
 - Setup Base WebFramework NodeJS
-    - Enter the base-webframework-nodejs folder
-        - `cd base-webframework-nodejs`
+    - Enter the auth-webframework-nodejs folder
+        - `cd auth-webframework-nodejs`
     - Install all required packages with root-level access (if needed)
         - `sudo npm install`    
     - Start default application using npm
@@ -42,7 +42,7 @@ git clone https://github.com/RAK3RMAN/base-webframework-nodejs.git
     - If you want a different broadcast port, you can configure these values by proceeding with the:
         - Hardcode option:
             - Enter the `sysConfig.json` file
-                - `sudo nano base-webframework-nodejs/config/sysConfig.json`
+                - `sudo nano auth-webframework-nodejs/config/sysConfig.json`
             - Edit the `console_port` parameter to your desired configuration
     - If any errors occur, please read the logs and attempt to resolve. If resolution cannot be achieved, post in the issues under this project. 
 - Access web application through `localhost:3000`
