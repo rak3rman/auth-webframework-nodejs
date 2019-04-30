@@ -10,14 +10,23 @@ This project is a auth web framework which uses the plugin Passport.js to provid
 ```
 --app.js # Primary NodeJS file
 --routes # Routes for views
+  --authRoutes.js
   --mainRoutes.js
 --views # Components of webpage, HTML
   --pages
     --home.ejs # Home Page
     --error.ejs # Error Page
+    --login.ejs # Login Page
+    --sign_up.ejs # Sign Up Page
 --config # Folder where configurations are set
   --exitOpt.js # Exit options when running in testing environment
   --sysConfig.json # Appears upon system configuration within application
+--resolvers # Logic Resolvers
+  --authResolver # Auth Logic
+--models # MongoDB Model's
+  --userModel.js # MongoDB Auth Model
+--sys_funct # System Functions
+  --passport.js # Passport.js Logic
 --static # Place static files to be accessed by webpage here
 --package.json # NPM 
 --package-lock.json
@@ -25,6 +34,7 @@ This project is a auth web framework which uses the plugin Passport.js to provid
 --LICENSE
 --README.md
 --.travis.yml
+--.gitignore
 ```
 
 ## Install and Setup
